@@ -65,6 +65,12 @@ def _parse_xy_table(table, ns):
             for d in subcolumn.findall('d', ns):
                 titles.append(_get_all_text(d))
             index = pd.Index(titles)
+    
+    # sometimes there is a <RowTitlesColumn> that's just empty. 
+    # we just pretend we never saw those
+    if index is not None:
+        if index.size == 0:
+            index = None
 
     columns = {}
     for xcolumn in chain(table.findall('XColumn', ns), table.findall('XAdvancedColumn', ns)):
